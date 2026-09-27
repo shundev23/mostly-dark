@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>素粒子の軌跡</title>
+  <meta name="description" content="ヒッグス粒子・ミュー粒子・ニュートリノ・タウ粒子が生まれて動く様子を、実際の値をもとに3Dで再生するページ。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="素粒子の軌跡">
+  <meta property="og:description" content="ヒッグス粒子・ミュー粒子・ニュートリノ・タウ粒子が生まれて動く様子を、実際の値をもとに3Dで再生するページ。">
+  <meta name="theme-color" content="#05070D">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305070D'/%3E%3Cpath d='M10 44 C 24 40, 34 30, 54 12' stroke='%23FF5C6C' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M10 44 C 22 46, 38 44, 56 36' stroke='%234DA3FF' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='44' r='6' fill='%23FFB547'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=Shippori+Mincho:wght@700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">3Dで見る素粒子</p>
+    <h1>素粒子の軌跡</h1>
+    <p class="lede">ヒッグス粒子、ミュー粒子、ニュートリノ、タウ粒子が、どこで生まれてどう動くかを3Dで再生する。数値は実際の値を使い、時間と大きさだけ見やすく変えている。</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="場面">
+    <button class="tab" type="button" role="tab" data-scene="higgs" id="tab-higgs" aria-controls="panel"><span class="sym">H</span>ヒッグス粒子</button>
+    <button class="tab" type="button" role="tab" data-scene="muon" id="tab-muon" aria-controls="panel"><span class="sym">μ</span>ミュー粒子</button>
+    <button class="tab" type="button" role="tab" data-scene="neutrino" id="tab-neutrino" aria-controls="panel"><span class="sym">ν</span>ニュートリノ</button>
+    <button class="tab" type="button" role="tab" data-scene="leptons" id="tab-leptons" aria-controls="panel"><span class="sym">τ</span>タウ粒子と3兄弟</button>
+  </div>
+
+  <main class="stage">
+    <div class="viewport" id="viewport">
+      <canvas id="gl" role="img" aria-label="素粒子の3D表示"></canvas>
+      <div class="labels" id="labels" aria-hidden="true"></div>
+      <div class="hud" id="hud"></div>
+      <p class="hint">ドラッグで回転・ピンチかホイールで拡大</p>
+      <div class="playbar">
+        <button class="pbtn" type="button" id="btn-replay">もう一度</button>
+        <button class="pbtn" type="button" id="btn-play" aria-pressed="false">一時停止</button>
+      </div>
+    </div>
+    <aside class="panel" id="panel" role="tabpanel" aria-live="off"></aside>
+  </main>
+
+  <p class="foot">各場面の「大げさにしている所」に、実際との違いを書いている。</p>
+</div>
+
+<!-- three.js r128（MITライセンス）を同梱。外部CDNが落ちても表示できるようにしている -->
+<script src="vendor/three/three.min.js"></script>
+<script src="vendor/three/OrbitControls.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
