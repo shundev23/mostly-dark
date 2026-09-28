@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CompositionBar from "../components/CompositionBar.astro";
+import ShelfCard from "../components/ShelfCard.astro";
+import WorkCard from "../components/WorkCard.astro";
+import { SITE, SECTIONS, type SectionKey } from "../site";
+import { withBase } from "../lib/paths";
+import { getPublishedWorks } from "../lib/works";
+
+const works = await getPublishedWorks();
+const [latestWork] = works;
+
+// 棚ごとの件数。実習とノートは、中身を作る段階（Step 2・3）でコレクションから数えるように変える
+const counts: Record<SectionKey, number> = {
+  works: works.length,
+  labs: 0,
+  notes: 0,
+};
+---
+
+<BaseLayout>
+  <section class="hero container" aria-labelledby="site-title">
+    <p class="eyebrow">{SITE.titleEn}</p>
+    <h1 id="site-title"><span class="hobo">ほぼ</span>ダーク</h1>
+    <p class="tagline">{SITE.tagline}</p>
+    <CompositionBar />
+  </section>
+
+  <section class="container block" aria-labelledby="shelves-title">
+    <h2 id="shelves-title" class="block-title">3つの棚</h2>
+    <ul class="shelves">
+      {
+        SECTIONS.map((section) => (
+          <li>
+            <ShelfCard section={section} count={counts[section.key]} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    latestWork && (
+      <section class="container block" aria-labelledby="latest-title">
+        <div class="block-head">
+          <h2 id="latest-title" class="block-title">最新の作品</h2>
+          <a class="text-link more" href={withBase("works/")}>
+            作品をすべて見る
+          </a>
+        </div>
+        <WorkCard work={latestWork} headingLevel={3} layout="wide" />
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .hero { display: grid; gap: 14px; padding-block: 64px 40px; }
+  .hero h1 { font: 700 clamp(48px, 10vw, 84px)/1.1 var(--font-display); letter-spacing: .05em; }
+  /* 「ほぼ」は少し控えめに。名前はゆるく、中身はちゃんと */
+  .hobo { color: var(--text-2); font-size: .72em; margin-right: .04em; }
+  .tagline { max-width: 32em; margin-bottom: 18px; font-size: clamp(16px, 2.4vw, 19px); color: var(--text-2); }
+
+  .block { margin-top: 40px; }
+  .block-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 16px; }
+  .block-title { font: 700 20px/1.4 var(--font-display); letter-spacing: .04em; }
+  .block > .block-title { margin-bottom: 16px; }
+  .more { font-size: 13.5px; }
+
+  .shelves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 820px) {
+    .shelves { grid-template-columns: minmax(0, 1fr); }
+    .hero { padding-block: 44px 32px; }
+  }
+</style>

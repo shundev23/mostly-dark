@@ -1,0 +1,26 @@
+---
+import { SITE } from "../site";
+
+// ビルドした年。年が変わっても書き換え不要にする
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <p class="about">{SITE.title}：天体物理学・宇宙論の独学ポートフォリオ</p>
+    <p class="meta">
+      <a class="text-link" href={SITE.repoUrl}>GitHub</a>
+      <span aria-hidden="true">·</span>
+      <span class="mono">© {year} {SITE.author}</span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { margin-top: 72px; border-top: 1px solid var(--line); }
+  .inner {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
+    padding-block: 24px 32px; font-size: 13px; color: var(--text-3);
+  }
+  .meta { display: inline-flex; align-items: center; gap: 10px; }
+</style>

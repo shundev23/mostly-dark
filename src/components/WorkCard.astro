@@ -1,0 +1,90 @@
+---
+/**
+ * 作品のカード。カード全体がリンクになる（見出しのリンクを広げている）。
+ *   layout="grid" … 一覧ページ用（画像が上）
+ *   layout="wide" … トップページの目立たせたい1件用（広い画面では画像が左）
+ */
+import { Image } from "astro:assets";
+import { workUrl, type Work } from "../lib/works";
+import { formatDate, isoDate } from "../lib/format";
+import { isExternal } from "../lib/paths";
+
+interface Props {
+  work: Work;
+  /** 見出しの階層。ページの h1 直下なら 2、h2 の中に並べるなら 3 */
+  headingLevel?: 2 | 3;
+  layout?: "grid" | "wide";
+}
+
+const { work, headingLevel = 2, layout = "grid" } = Astro.props;
+const { title, summary, publishedAt, updatedAt, tags, cover, coverAlt } = work.data;
+
+const Heading = headingLevel === 2 ? "h2" : "h3";
+const href = workUrl(work);
+const external = isExternal(work.data.href);
+---
+
+<article class:list={["work-card", layout]}>
+  <div class="thumb">
+    {
+      cover ? (
+        <Image src={cover} alt={coverAlt ?? ""} widths={[480, 960]} sizes="(max-width: 760px) 100vw, 560px" />
+      ) : (
+        <div class="placeholder" aria-hidden="true"></div>
+      )
+    }
+  </div>
+  <div class="body">
+    <Heading class="title">
+      <a class="link" href={href} rel={external ? "noopener" : undefined}>{title}</a>
+    </Heading>
+    <p class="summary">{summary}</p>
+    <div class="meta">
+      <time class="mono" datetime={isoDate(publishedAt)}>{formatDate(publishedAt)}</time>
+      {updatedAt && <span class="mono">更新 {formatDate(updatedAt)}</span>}
+      {
+        tags.length > 0 && (
+          <ul class="tags" aria-label="タグ">
+            {tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</article>
+
+<style>
+  .work-card {
+    position: relative; display: grid; overflow: hidden;
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius);
+    transition: border-color .2s;
+  }
+  .work-card:hover { border-color: var(--line-2); }
+  /* リンクにフォーカスが来たら、カード全体に枠を出す */
+  .work-card:has(.link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .link:focus-visible { outline: none; }
+
+  .thumb { aspect-ratio: 16 / 10; background: radial-gradient(120% 90% at 50% 40%, #0B1226 0%, var(--bg) 70%); border-bottom: 1px solid var(--line); }
+  .thumb :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .placeholder { width: 100%; height: 100%; }
+
+  .body { display: grid; gap: 8px; align-content: start; padding: 18px 20px 20px; }
+  .title { font: 700 21px/1.35 var(--font-display); letter-spacing: .03em; }
+  .link { text-decoration: none; }
+  .link::after { content: ""; position: absolute; inset: 0; } /* カード全体をクリックできるようにする */
+  .work-card:hover .link { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .summary { font-size: 14.5px; color: var(--text-2); }
+
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 4px; font-size: 12.5px; color: var(--text-3); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .tags li { padding: 1px 9px; border: 1px solid var(--line-2); border-radius: 999px; line-height: 1.7; color: var(--text-2); }
+
+  @media (min-width: 760px) {
+    .wide { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+    .wide .thumb { border-bottom: 0; border-right: 1px solid var(--line); }
+    .wide .body { align-content: center; padding: 28px; gap: 10px; }
+    .wide .title { font-size: 26px; }
+  }
+</style>

@@ -1,0 +1,25 @@
+{
+  "name": "mostly-dark",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ほぼダーク：宇宙の95%を占める「見えないもの」を、式とデータで追いかける独学ポートフォリオ",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "build": "astro check && astro build && node tools/check-links.mjs",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.3.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^24.19.0",
+    "typescript": "^6.0.3"
+  }
+}

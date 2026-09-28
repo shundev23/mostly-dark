@@ -1,0 +1,61 @@
+---
+/** トップページの「棚」のカード。カード全体が、その棚の一覧ページへのリンクになる */
+import type { Section } from "../site";
+import { withBase } from "../lib/paths";
+
+interface Props {
+  section: Section;
+  /** 公開している件数。0 のときは「準備中」と出す */
+  count: number;
+}
+
+const { section, count } = Astro.props;
+---
+
+<article class="shelf" style={`--c: var(--c-${section.key})`}>
+  <p class="eyebrow">{section.labelEn}</p>
+  <h3 class="title">
+    <a class="link" href={withBase(section.path)}>{section.label}</a>
+  </h3>
+  <p class="lead">{section.lead}</p>
+  <p class="foot">
+    {
+      count > 0 ? (
+        <span class="count">
+          <span class="mono">{count}</span>件
+        </span>
+      ) : (
+        <span class="count pending">準備中</span>
+      )
+    }
+    <span class="arrow" aria-hidden="true">→</span>
+  </p>
+</article>
+
+<style>
+  .shelf {
+    position: relative; display: grid; grid-template-rows: auto auto 1fr auto; gap: 8px; height: 100%;
+    padding: 20px 20px 18px; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius);
+    transition: border-color .2s;
+  }
+  /* 左上に棚の色の短い線（軌跡のイメージ） */
+  .shelf::before {
+    content: ""; position: absolute; left: 20px; top: -1px; width: 36px; height: 2px; border-radius: 0 0 2px 2px;
+    background: var(--c);
+  }
+  .shelf:hover { border-color: var(--line-2); }
+  .shelf:has(.link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .link:focus-visible { outline: none; }
+
+  .title { font: 700 22px/1.3 var(--font-display); letter-spacing: .04em; }
+  .link { text-decoration: none; }
+  .link::after { content: ""; position: absolute; inset: 0; } /* カード全体をクリックできるようにする */
+  .lead { font-size: 14px; color: var(--text-2); }
+
+  .foot { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; }
+  /* 数字だけ大きくしても行の高さが変わらないように line-height: 1 にする（「準備中」の棚と線の位置を揃える） */
+  .count .mono { margin-right: 2px; font-size: 15px; line-height: 1; color: var(--c); }
+  .pending { color: var(--text-3); }
+  .arrow { color: var(--text-3); transition: transform .2s, color .2s; }
+  .shelf:hover .arrow { color: var(--c); transform: translateX(3px); }
+</style>

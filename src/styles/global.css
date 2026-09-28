@@ -1,0 +1,98 @@
+/* ===== ほぼダーク 共通スタイル =====
+   色・文字・余白の基準だけをここに置く。部品ごとの見た目は各 .astro ファイルの <style> に書く。 */
+
+/* ---------- 土台 ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; }
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+[hidden] { display: none !important; }
+
+/* 作品「素粒子の軌跡」（検出器のイベントディスプレイ）に合わせた、暗い1テーマ固定のデザイン */
+:root {
+  color-scheme: dark;
+  --bg: #05070D;
+  --bg-2: #0A0F1D;
+  --bg-3: #10172B;
+  --line: #1C2440;
+  --line-2: #2A3558;
+  --text: #E6EAF3;
+  --text-2: #A7B0C6;
+  --text-3: #8089A2;
+  --accent: #A9BEDF;
+
+  /* 宇宙の組成（トップの帯グラフ・ファビコンと同じ色） */
+  --c-de: #161D33;
+  --c-dm: #34416B;
+  --c-light: #FFB547;
+
+  /* 棚ごとの色（素粒子の軌跡の、電子・Zボソン・タウ粒子の色） */
+  --c-works: #4DA3FF;
+  --c-labs: #5EE6A0;
+  --c-notes: #B388FF;
+
+  --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", serif;
+  --font-body: "IBM Plex Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", "Noto Sans CJK JP", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-sym: "STIX Two Text", "Cambria Math", "Times New Roman", serif;
+
+  --container: 1080px;
+  --gutter: 20px;
+  --radius: 12px;
+}
+@media (max-width: 520px) {
+  :root { --gutter: 16px; }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+main { flex: 1; }
+main:focus { outline: none; } /* 「本文へ移動」で移ったときに、本文全体へ枠を出さない */
+h1, h2, h3 { margin: 0; line-height: 1.3; text-wrap: balance; font-feature-settings: "palt"; }
+p { margin: 0; text-wrap: pretty; } /* 最後の行が1〜2文字だけになるのを防ぐ */
+/* 見出しと短い説明文は、文節の切れ目で改行する（対応ブラウザのみ。非対応なら通常の改行） */
+h1, h2, h3, .lead, .tagline, .summary { word-break: auto-phrase; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+::selection { background: rgba(255, 181, 71, .35); }
+
+/* ---------- 共通の部品 ---------- */
+.container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* 画面には出さず、読み上げには残す */
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 10; padding: 8px 12px; border-radius: 8px;
+  background: var(--text); color: var(--bg); font-size: 14px; text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+/* 英字の小見出し（WORKS など） */
+.eyebrow { font: 500 12px/1.4 var(--font-mono); letter-spacing: .16em; color: var(--text-3); }
+
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.sym { font-family: var(--font-sym); }
+
+/* 本文中のリンク */
+.text-link { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(169, 190, 223, .45); text-underline-offset: 3px; }
+.text-link:hover { text-decoration-color: currentColor; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

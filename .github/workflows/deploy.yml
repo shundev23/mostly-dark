@@ -1,0 +1,49 @@
+# ほぼダーク を GitHub Pages に公開するワークフロー
+#
+# main に push すると「インストール → 型チェック → ビルド → リンク検査 → 公開」まで自動で進む。
+# どこかで失敗したら公開されず、前の版がそのまま残る。
+#
+# 最初に1回だけ必要な設定：
+#   リポジトリの Settings → Pages → Build and deployment → Source を「GitHub Actions」にする
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Actions タブから手動でも実行できるようにする
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 公開の処理が重ならないようにする（実行中の公開は途中で止めない）
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # package-lock.json を見て npm でインストールし、npm run build を実行して、dist/ を公開用にアップロードする
+      - name: Install, build, and upload
+        uses: withastro/action@v6
+        with:
+          # package.json の engines（>=22.12.0）を満たす LTS 版。手元の .nvmrc と揃えておく
+          node-version: 24
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

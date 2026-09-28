@@ -1,0 +1,23 @@
+---
+/**
+ * 見つからないページ。GitHub Pages はどの深さのURLでもこのページを返すので、
+ * リンクはすべて withBase() の絶対パスにしている（相対パスだと階層によって切れる）。
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "../lib/paths";
+---
+
+<BaseLayout title="ページが見つかりません" description="お探しのページは見つかりませんでした。" noindex>
+  <section class="container notfound" aria-labelledby="nf-title">
+    <p class="eyebrow">404 NOT FOUND</p>
+    <h1 id="nf-title">このページは、まだ観測されていません</h1>
+    <p class="lead">URLが変わったか、まだ存在しないページです。</p>
+    <p><a class="text-link" href={withBase("")}>トップへ戻る</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound { display: grid; gap: 12px; padding-block: 88px 40px; }
+  h1 { font: 700 clamp(26px, 5vw, 36px)/1.35 var(--font-display); letter-spacing: .03em; }
+  .lead { color: var(--text-2); }
+</style>

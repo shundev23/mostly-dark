@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import { getSection } from "../../site";
+
+// 実習の記事は Step 3 でコレクションにする。それまではこの予告だけを出す
+const section = getSection("labs");
+---
+
+<BaseLayout title={section.label} description={section.description}>
+  <div class="container">
+    <PageHeader section={section} />
+    <EmptyState>
+      <p>最初の実習では、銀河の回転曲線（SPARCの公開データ）を自分で解析して、ダークマターが必要になる理由を確かめる予定。</p>
+    </EmptyState>
+  </div>
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+/** 各棚のページ上部（英字の小見出し・ページ名・一行説明） */
+import type { Section } from "../site";
+
+interface Props {
+  section: Section;
+}
+
+const { section } = Astro.props;
+---
+
+<header class="page-header" style={`--c: var(--c-${section.key})`}>
+  <p class="eyebrow">{section.labelEn}</p>
+  <h1>{section.label}</h1>
+  <p class="lead">{section.lead}</p>
+</header>
+
+<style>
+  .page-header { display: grid; gap: 8px; padding-block: 48px 32px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; }
+  /* 棚の色の短い線（軌跡のイメージ） */
+  .eyebrow::before { content: ""; width: 20px; height: 2px; border-radius: 2px; background: var(--c); }
+  h1 { font: 700 clamp(30px, 6vw, 42px)/1.2 var(--font-display); letter-spacing: .04em; }
+  .lead { max-width: 40em; color: var(--text-2); }
+</style>

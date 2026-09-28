@@ -1,70 +1,120 @@
-# 素粒子の軌跡
+# ほぼダーク
 
-ヒッグス粒子・ミュー粒子・ニュートリノ・タウ粒子が、どこで生まれてどう動くかを3Dで再生する静的サイト。
+宇宙の95%を占める「見えないもの」を、式とデータで追いかける。
+ダークマターとダークエネルギーを中心に、天体物理学・宇宙論を独学している記録。
 
-公開URL（GitHub Pagesを有効にした後）: https://shundev23.github.io/particle-tracks/
+公開URL: https://shundev23.github.io/mostly-dark/
 
-## 4つの場面
+## 3つの棚
 
-| 場面 | 見られること |
-|---|---|
-| ヒッグス粒子 | LHCの衝突で生まれたヒッグス粒子が、光子2個、または電子2個＋ミュー粒子2個に壊れる様子。衝突を集めて125 GeVの山と「5σ」を確かめるグラフ付き |
-| ミュー粒子 | 宇宙線から生まれたミュー粒子が、上空15kmから地上へ降ってくる様子。時間の遅れ（特殊相対論）のあり・なしを切り替えられる |
-| ニュートリノ | 太陽から来たニュートリノが地球を素通りする様子と、種類が入れ替わるニュートリノ振動 |
-| タウ粒子と3兄弟 | 電子・ミュー粒子・タウ粒子を重さに比例した体積の球で比べ、壊れ方を再生する |
-
-URLの末尾で場面を直接開ける：`#higgs` / `#muon` / `#neutrino` / `#leptons`
-
-## 操作
-
-- ドラッグで回転、ピンチかホイールで拡大・縮小
-- 右下の「もう一度」「一時停止」で再生を操作する
-- OSで「視差効果を減らす（prefers-reduced-motion）」が有効なら、止まった状態で開く
+| 棚 | URL | 中身 |
+|---|---|---|
+| 作品 | `/mostly-dark/works/` | 3Dや図解で、目に見えない動きを見えるようにしたもの |
+| 実習 | `/mostly-dark/labs/` | 公開データを自分で解析して、教科書の話を数字で確かめた記録（準備中） |
+| ノート | `/mostly-dark/notes/` | 教科書の式を、飛ばさずに手で追った記録（準備中） |
 
 ## ディレクトリ構成
 
 ```
-particle-tracks/
-├── index.html              # ページ本体（マークアップ）
-├── css/
-│   └── style.css           # 見た目（暗い1テーマ固定）
-├── js/
-│   └── main.js             # 4場面の3D表示・物理計算・パネル制御
-├── vendor/
-│   └── three/
-│       ├── three.min.js    # three.js r128
-│       ├── OrbitControls.js
-│       └── LICENSE         # three.js の MIT ライセンス
-├── .nojekyll               # GitHub PagesでJekyllの処理を通さない
+mostly-dark/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml            # main に push → ビルド → GitHub Pages に公開
+├── public/                       # 加工せずにそのまま配信するファイル
+│   ├── favicon.svg               # 宇宙の組成を描いた扇形のアイコン
+│   └── works/
+│       └── particle-tracks/      # 作品「素粒子の軌跡」の本体（three.js の静的ページ）
+├── src/
+│   ├── components/               # 画面の部品
+│   │   ├── CompositionBar.astro  # トップの帯グラフ（宇宙の組成）
+│   │   ├── EmptyState.astro      # まだ中身がない棚の表示
+│   │   ├── PageHeader.astro      # 各棚のページ上部
+│   │   ├── ShelfCard.astro       # トップの棚のカード
+│   │   ├── SiteFooter.astro
+│   │   ├── SiteHeader.astro
+│   │   └── WorkCard.astro        # 作品のカード
+│   ├── content/
+│   │   └── works/                # 作品の紹介（1作品 = 1ファイル）
+│   │       ├── covers/           # カードに出す表紙画像
+│   │       └── particle-tracks.md
+│   ├── data/
+│   │   └── composition.ts        # 宇宙の組成の数値（Planck 2018）
+│   ├── layouts/
+│   │   └── BaseLayout.astro      # 全ページ共通の <head>・ヘッダー・フッター
+│   ├── lib/
+│   │   ├── format.ts             # 日付の表示（日本時間に固定）
+│   │   ├── paths.ts              # base 付きのサイト内リンクを作る withBase()
+│   │   └── works.ts              # 作品一覧の取得（新しい順・下書きを除く）
+│   ├── pages/                    # ファイルの場所がそのままURLになる
+│   │   ├── index.astro           # トップ          → /mostly-dark/
+│   │   ├── works/index.astro     # 作品の一覧      → /mostly-dark/works/
+│   │   ├── labs/index.astro      # 実習（準備中）  → /mostly-dark/labs/
+│   │   ├── notes/index.astro     # ノート（準備中）→ /mostly-dark/notes/
+│   │   └── 404.astro             # 見つからないページ
+│   ├── styles/
+│   │   └── global.css            # 色・文字・余白の基準
+│   ├── content.config.ts         # 作品の項目の定義（書き間違いをビルド時に止める）
+│   └── site.ts                   # サイト名と、3つの棚の名前・説明
+├── tools/
+│   ├── check-links.mjs           # ビルド後のリンク切れ検査
+│   └── public-dir-index.mjs      # 開発サーバーでも public/ の作品を本番と同じURLで開く
+├── .gitignore
+├── .nvmrc                        # Node のバージョン（24）
+├── astro.config.mjs              # site・base などの設定
+├── package.json
+├── package-lock.json             # 依存パッケージのバージョンを固定（GitHub Actions もこれを使う）
+├── tsconfig.json
 └── README.md
 ```
 
-ビルド工程はない。ファイルをそのまま配信すれば動く。three.jsは同梱しているので、外部CDNに依存しない（Google Fontsだけは外部から読み込み、読めない環境では端末のフォントで表示する）。
+## 手元で動かす
 
-## ローカルで見る
+Node.js 22.12 以上が必要（GitHub Actions では 24 を使う）。
 
-```sh
-cd particle-tracks
-python3 -m http.server 8000
-# http://localhost:8000/ を開く
-```
+| コマンド | すること |
+|---|---|
+| `npm install` | 依存パッケージを入れる（最初の1回と、package.json を変えたとき） |
+| `npm run dev` | 開発サーバーを起動 → http://localhost:4321/mostly-dark/ |
+| `npm run build` | 型チェック → ビルド → リンク検査。GitHub Actions と同じ内容 |
+| `npm run preview` | ビルド結果（dist/）を本番と同じ形で確認 |
 
-## 計算について
+## 作品を追加する
 
-実際の値で計算している所：
+1. 作品のファイル一式を `public/works/作品名/` に置く。入口は `index.html` にして、ページ内の CSS・JS・画像は相対パスで読み込む。
+2. `src/content/works/作品名.md` を作り、一覧に出す情報を書く。
 
-- ヒッグス粒子の崩壊は相対論的な運動学（ローレンツ変換）で計算し、検出器の分解能ぶんのばらつきを加えている
-- 電気を持つ粒子の曲がり方は、磁場3.8 T（CMS検出器）での曲率半径 R[m] = pT[GeV] / (0.3 × B[T])
-- ミュー粒子がどこで壊れるかは、平均寿命2.197マイクロ秒の指数分布から1個ずつランダムに決める
+   ```md
+   ---
+   title: 作品名
+   summary: 一覧のカードに出す一行説明（120文字まで）
+   publishedAt: 2026-10-01
+   href: works/作品名/
+   tags: [タグ1, タグ2]
+   cover: ./covers/作品名.webp     # 任意。付けたら coverAlt も必須
+   coverAlt: 表紙画像の説明
+   draft: false                    # true にすると本番には出ない（npm run dev では見える）
+   ---
+   ```
 
-見やすさのために変えている所：
+3. `npm run build` が通れば、push して公開できる状態。次のような書き間違いは、ここでエラーになる。
+   - `href` を `/works/...` のように `/` で始めた（本番で404になる書き方）
+   - 表紙画像のファイル名が違う、`coverAlt` を書き忘れた
+   - リンク先のファイルが無い
 
-- 時間（大幅なスロー再生）、太陽と地球の大きさと距離、ニュートリノ振動の周期、ヒストグラムに入るヒッグス粒子の割合
-- 質量の山の大きさ（σ）は、山の外側から背景を見積もる簡略版の計算
+## 公開の流れ
 
-詳しくは各場面の「大げさにしている所」に書いている。
+`main` に push すると、GitHub Actions が「インストール → 型チェック → ビルド → リンク検査 → 公開」を自動で行う。途中で失敗したら公開されず、前の版がそのまま残る。進み具合はリポジトリの Actions タブで見られる。
+
+## base（/mostly-dark/）について
+
+GitHub Pages のプロジェクトサイトなので、サイト全体が `/mostly-dark/` の下に置かれる。
+
+- サイト内リンクは `src/lib/paths.ts` の `withBase()` を通す。`<a href="/works/">` と直接書くと本番で404になり、`npm run build` のリンク検査で止まる。
+- リポジトリ名を変えたら、`astro.config.mjs` の `base` も同じ名前に変える。
 
 ## 使っているもの
 
-- [three.js](https://threejs.org/) r128（MIT License）
+- [Astro](https://astro.build/) 7
+- [three.js](https://threejs.org/) r128（MIT License、`public/works/particle-tracks/vendor/three/` に同梱）
 - Google Fonts：IBM Plex Sans JP / IBM Plex Mono / Shippori Mincho / STIX Two Text
+- 宇宙の組成の数値：Planck Collaboration (2020), *A&A* 641, A6（[arXiv:1807.06209](https://arxiv.org/abs/1807.06209)）

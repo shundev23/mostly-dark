@@ -1,0 +1,64 @@
+---
+/**
+ * 宇宙の組成の帯グラフ。「ほぼダーク」という名前の由来を、数字で見せる。
+ * 数値は src/data/composition.ts にまとめてある。
+ */
+import { COMPOSITION, COMPOSITION_SOURCE } from "../data/composition";
+
+// 光と関わる成分の合計（いまは「ふつうの物質」だけ）
+const luminousPercent = COMPOSITION.filter((c) => c.luminous).reduce((sum, c) => sum + c.percent, 0);
+const format = (n: number) => `${n.toFixed(1)}%`;
+---
+
+<figure class="composition">
+  {/* 数値は下の凡例で読み上げられるので、帯そのものは装飾として扱う */}
+  <div class="bar" aria-hidden="true">
+    {COMPOSITION.map((c) => <span class={`seg ${c.key}`} style={`flex-grow: ${c.percent}`}></span>)}
+  </div>
+  <ul class="legend">
+    {
+      COMPOSITION.map((c) => (
+        <li class:list={[{ luminous: c.luminous }]}>
+          <i class={`swatch ${c.key}`} aria-hidden="true"></i>
+          <span>{c.label}</span>
+          <span class="value mono">{format(c.percent)}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <figcaption>
+    <p class="note">光と関わるのは、この<span class="mono">{format(luminousPercent)}</span>だけ。</p>
+    <p class="source">
+      数値は<a class="text-link" href={COMPOSITION_SOURCE.url}>{COMPOSITION_SOURCE.label}</a>の観測（ΛCDMモデル）から計算。残りの約0.1%はニュートリノなど。
+    </p>
+  </figcaption>
+</figure>
+
+<style>
+  .composition { display: grid; gap: 14px; max-width: 720px; margin: 0; }
+
+  .bar { display: flex; gap: 2px; height: 12px; }
+  .seg { min-width: 4px; height: 100%; }
+  .seg:first-child { border-radius: 999px 0 0 999px; }
+  .seg:last-child { border-radius: 0 999px 999px 0; }
+
+  .de { background: var(--c-de); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); }
+  .dm { background: var(--c-dm); }
+  .baryon { background: var(--c-light); }
+  .bar .baryon { box-shadow: 0 0 14px 1px rgba(255, 181, 71, .55); }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; padding: 0; list-style: none;
+    font-size: 13.5px; color: var(--text-2);
+  }
+  /* 和文と数字（等幅フォント）の高さを揃えるため、文字のベースラインで並べる */
+  .legend li { display: inline-flex; align-items: baseline; gap: 8px; }
+  .swatch { flex: none; align-self: center; width: 10px; height: 10px; border-radius: 3px; }
+  .value { color: var(--text); }
+  .luminous, .luminous .value { color: var(--c-light); }
+
+  figcaption { display: grid; gap: 4px; }
+  .note { font-size: 14.5px; color: var(--text); }
+  .note .mono { color: var(--c-light); }
+  .source { font-size: 12px; line-height: 1.7; color: var(--text-3); }
+</style>

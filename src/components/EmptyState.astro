@@ -1,0 +1,22 @@
+---
+/** まだ中身がない棚に出す表示。次に何が入る予定かを <slot /> に書く */
+interface Props {
+  title?: string;
+}
+
+const { title = "まだありません" } = Astro.props;
+---
+
+<div class="empty">
+  <p class="title">{title}</p>
+  <div class="body"><slot /></div>
+</div>
+
+<style>
+  .empty {
+    display: grid; gap: 6px; padding: 28px 24px; border: 1px dashed var(--line-2); border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--bg-2), transparent);
+  }
+  .title { font-weight: 700; }
+  .body { font-size: 14.5px; color: var(--text-2); }
+</style>

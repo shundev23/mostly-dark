@@ -1,0 +1,6 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  // public/ は配信するだけの静的ファイル（three.js など）なので型チェックの対象外にする
+  "exclude": ["dist", "public"]
+}

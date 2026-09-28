@@ -44,7 +44,9 @@ sup, sub { font-size: .7em; line-height: 0; }
 
 /* ---------- 見出し ---------- */
 .top { display: grid; gap: 6px; margin-bottom: 16px; }
-.eyebrow { margin: 0; font-size: 12px; letter-spacing: .12em; color: var(--text-3); }
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-3); }
+.crumbs a { color: var(--text-2); text-decoration: none; }
+.crumbs a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 h1 { margin: 0; font: 700 clamp(28px, 5vw, 40px)/1.15 var(--font-display); letter-spacing: .03em; }
 .lede { margin: 0; max-width: 46em; font-size: 14.5px; color: var(--text-2); }
 

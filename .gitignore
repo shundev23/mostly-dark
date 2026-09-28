@@ -1,0 +1,16 @@
+# ビルド結果（GitHub Actions が毎回作り直す）
+dist/
+.astro/
+
+# 依存パッケージ（package-lock.json から復元できる）
+node_modules/
+
+# ログ
+npm-debug.log*
+
+# 環境変数（秘密の値を入れる可能性があるファイル）
+.env
+.env.*
+
+# macOS
+.DS_Store
